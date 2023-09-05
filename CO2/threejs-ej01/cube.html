@@ -9,12 +9,17 @@
 	</style>
 </head>
 <body>
-
+	<!--  Se hace el llamnado a la libreria-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-	
+ // se crea una variable y se iguala a la funcion scene() de la libreria 	
 const scene = new THREE.Scene();
-
+/*se crea una variable y se iguala a la funcion PerpectiveCamara que tiene como parametros 
+        1.
+        2.
+        3.
+        
+    */
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 const renderer = new THREE.WebGLRenderer();
@@ -37,7 +42,7 @@ function animate() {
 	renderer.render( scene, camera );
 }
 
-animate(); 
+animate(); // llamado a la funcion 
 </script>
 </body>
 </html>
