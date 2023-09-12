@@ -6,8 +6,8 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
 const geometry2 = new THREE.SphereGeometry( 1, 10, 10 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
-const material1 = new THREE.MeshBasicMaterial( { color: 0x000080} );
+const material = new THREE.MeshNormalMaterial( { color: 0x00ff00} );
+const material1 = new THREE.MeshNormalMaterial( { color: 0x000080} );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 camera.position.z = 5;
@@ -15,7 +15,6 @@ cube.position.x = 2;
 const sphere = new THREE.Mesh( geometry2, material1 );
 scene.add(sphere);
 sphere.position.x = -2;
-
 
 function animate() {
     requestAnimationFrame( animate )
