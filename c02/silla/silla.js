@@ -8,7 +8,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Crear el asiento de la silla (un cubo)
-const seatGeometry = new THREE.BoxGeometry(4, 0.2, 4); // Ancho, alto y profundidad del asiento
+const seatGeometry = new THREE.BoxGeometry(4, 0.5, 4); // Ancho, alto y profundidad del asiento
 const seatMaterial = new THREE.MeshNormalMaterial({ color: 0x0000FF });
 const seat = new THREE.Mesh(seatGeometry, seatMaterial);
 seat.position.set(0, 2, 0); // Coloca el asiento sobre el suelo
@@ -23,7 +23,7 @@ backrest.position.set(0, 3, -1.8); // Coloca el respaldo detrás del asiento
 scene.add(backrest);
 
 // Agregar patas de la silla (cuatro cilindros)
-const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2, 32); // Radio y altura de las patas
+const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 32); // Radio y altura de las patas
 const legMaterial = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
 
 const frontLeftLeg = new THREE.Mesh(legGeometry, legMaterial);
