@@ -1,64 +1,71 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title> Ejerccio 3 </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cono en Three.js</title>
 </head>
 <body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"> </script>
-<script>
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.antialias = true;
-document.body.appendChild(renderer.domElement);
+    
+    <script type="module">
+        // en esta parte agregamos el orbit controls
+        import * as THREE from "./three.module.js";
+        import { OrbitControls } from "./OrbitControls.js";
 
+        // Crear escena
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x2a3b4c);
 
+        // Crear cámara
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
 
-const geometry = new THREE.Geometry();
-// Definir los vértices del cono
-const radio = 3;
-const altura = 5;
-const segmentos = 100;
-const tipVertex = new THREE.Vector3(0, altura, 0);
+        // Crear renderizador
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
+        // Crear geometría de cono
+        const radius = 1;
+        const height = 2;
+        const segments = 32;
+        const geometry = new THREE.ConeGeometry(radius, height, segments);
+        
+        // Crear material
+        const material = new THREE.MeshNormalMaterial(
+);
 
-for(let i=0; i <= segmentos; i++){
-    const theta = (i / segmentos) *Math.PI * 2;
-    const x = radio * Math.cos(theta)
-    const z = radio * Math.sin(theta)
-    const vertex = new THREE.Vector3(x, 0, z)
-    geometry.vertices.push(vertex)
+        // Crear cono
+        const cone = new THREE.Mesh(geometry, material);
 
-    if (i < segmentos){
-        geometry.faces.push(new THREE.Face3(i, (i+1) % segmentos, segmentos))
-        geometry.faces.push(new THREE.Face3(i, segmentos, segmentos + 1))
-    }
-}
-geometry.vertices.push(new THREE.Vector3(0, altura, 0));
+        scene.add(cone);
 
-geometry.computeFaceNormals();
+        // Agregar controles de órbita
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.minDistance = 2;
+        controls.maxDistance = 19;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.5;
+        controls.maxPolarAngle = Math.PI;
+        controls.screenSpacePanning = true;
 
-const TextureLoader = new THREE.TextureLoader();
-const texture = TextureLoader.load("https://designshack.net/wp-content/uploads/background-textures.png");
+        const loader = new THREE.TextureLoader()
+        loader.load('.Texture.png', (texture)=>{
+            material.map = texture
+       
+        })
 
-const material = new THREE.MeshNormalMaterial({map: texture, wireframe: false , side : THREE.DoubleSide });
+        // Función de animación
+        const animate = function () {
+            requestAnimationFrame(animate);
 
+            cone.rotation.x += 0.01;
+            cone.rotation.y += 0.01;
 
-const customMesh = new THREE.Mesh(geometry, material);
-scene.add(customMesh);
+            renderer.render(scene, camera);
+        };
+        animate();
 
-camera.position.z = 10;
-
-    function animate() 
-    {
-        customMesh.rotation.x += 0.01;
-        customMesh.rotation.y += 0.01;
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);  //Renderizar la escena y la camara
-    }
-
-animate(); 
- //llamado de la funcion animate() para iniciar la anmacion del cubo 
-</script>
+    </script>
 </body>
 </html>
