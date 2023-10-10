@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcial Segundo corte</title>
+</head>
+<body>
+    
+    <script type="module">
+        import * as THREE from "./three.module.js";
+        import { OrbitControls } from "./OrbitControls.js";
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        function cubo(x, y, z, scale, textureUrl) {
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load(textureUrl);
+
+            const geometry = new THREE.Geometry();
+            // Definir los vértices del cubo
+            geometry.vertices.push(
+                new THREE.Vector3(-0.5, -0.5, -0.5),
+                new THREE.Vector3(0.5, -0.5, -0.5),
+                new THREE.Vector3(0.5, -0.5, 0.5),
+                new THREE.Vector3(-0.5, -0.5, 0.5),
+                new THREE.Vector3(-0.5, 0.5, -0.5),
+                new THREE.Vector3(0.5, 0.5, -0.5),
+                new THREE.Vector3(0.5, 0.5, 0.5),
+                new THREE.Vector3(-0.5, 0.5, 0.5)
+            );
+            // Definir las caras del cubo
+            geometry.faces.push(
+                new THREE.Face3(0, 1, 5),
+                new THREE.Face3(0, 5, 4),
+                new THREE.Face3(1, 2, 6),
+                new THREE.Face3(1, 6, 5),
+                new THREE.Face3(2, 3, 7),
+                new THREE.Face3(2, 7, 6),
+                new THREE.Face3(3, 0, 4),
+                new THREE.Face3(3, 4, 7),
+                new THREE.Face3(4, 5, 6),
+                new THREE.Face3(4, 6, 7),
+                new THREE.Face3(0, 3, 2),
+                new THREE.Face3(0, 2, 1)
+            );
+            // Calcular normales para las caras
+            geometry.computeFaceNormals();
+
+            
+
+            // Calcular coordenadas UV manualmente
+            geometry.faceVertexUvs[0] = [];
+            for (let i = 0; i < geometry.faces.length; i++) {
+                const face = geometry.faces[i];
+                const uvs = [];
+                for (let j = 0; j < 3; j++) {
+                    const vertexIndex = face.a + (j % 3);
+                    const vertex = geometry.vertices[vertexIndex];
+                    uvs.push(new THREE.Vector2((vertex.x + 0.5), (vertex.y + 0.5)));
+                }
+                geometry.faceVertexUvs[0].push(uvs);
+            }
+
+            // Función para trazar ejes
+            function trazarEjes() {
+                const axesHelper = new THREE.AxesHelper(5); // Longitud de los ejes
+                scene.add(axesHelper);
+            }
+            trazarEjes(); // Llama a la función para trazar ejes
+            const material = new THREE.MeshBasicMaterial({ wireframe: false, side: THREE.DoubleSide, map: texture });
+            const customMesh = new THREE.Mesh(geometry, material);
+            customMesh.position.set(x, y, z); // Ajusta la posición del cubo
+            customMesh.scale.set(scale, scale, scale); // Aplica la transformación de escala
+            scene.add(customMesh); // Agregar el cubo a la escena
+        }
+
+
+        camera.position.z = 5;
+        var controls= new OrbitControls(camera, renderer.domElement);
+        controls.minDistance = 2;
+        controls.maxDistance = 14;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.5;
+        controls.maxPolarAngle = Math.PI;
+        controls.screenSpacePanning = true;
+
+        //camera.position.x = 2;
+        camera.position.y = 2;
+
+        // Crea tres cubos en el origen con diferentes escalas y texturas
+        cubo(0, 0, 0, 1, 'https://images.unsplash.com/photo-1529524987368-af489318987c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1482&q=80');
+        cubo(0, 0.75, 0, 0.5, 'https://images.unsplash.com/photo-1567436670499-8d4129485548?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1429&q=80');
+        cubo(0, 1.125, 0, 0.25, 'https://images.unsplash.com/photo-1520298064646-747b5051dbb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80');
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+
+    </script>
+</body>
+</html>
