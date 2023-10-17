@@ -1,0 +1,216 @@
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title> ocultamiento Z-Buffering en THREE.js</title>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      
+    </script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcial Segundo corte</title>
+</head>
+<body>
+    
+    <script type="module">
+        import * as THREE from "./three.module.js";
+        import { OrbitControls } from "./OrbitControls.js";
+ // ejemplo de z- buffer 
+      /* // Configuración básica de la escena
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+    
+      const cubeGeometry = new THREE.BoxGeometry(1, 1, 1); // creamos un cubo
+      const torusGeometry = new THREE.TorusGeometry(1, 0.2, 16, 100); // creamos un geometria toro
+      const sphereGeometry = new THREE.SphereGeometry(1, 32, 32); // creamos una esfera 
+
+      const torusMaterial = new THREE.MeshNormalMaterial(); // materia toro
+      const sphereMaterial = new THREE.MeshNormalMaterial(); // material de la espera 
+      const cubeMaterial = new THREE.MeshNormalMaterial(); // material cubo
+
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+      const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+
+      sphere.position.x = -2;
+      cube.position.x = 0;
+      torus.position.x = 2;
+
+      // Agregar objetos a la escena
+      scene.add(sphere);
+      scene.add(cube);
+      scene.add(torus);
+
+      // Configurar la posición de la cámara
+      camera.position.z = 5;
+
+      // Agregar luz de color rosa
+      const pinkLight = new THREE.PointLight(0xff00ff, 1, 100);
+      pinkLight.position.set(2, 2, 2);
+      scene.add(pinkLight);
+
+      // Renderizar la escena y hacer que la cámara gire
+      function animate() {
+        requestAnimationFrame(animate);
+
+        // Hacer que la cámara gire alrededor de la escena
+        camera.position.x = 5 * Math.cos(Date.now() * 0.001);
+        camera.position.z = 5 * Math.sin(Date.now() * 0.001);
+        camera.lookAt(0, 0, 0);
+
+        // Rotar los objetos
+        sphere.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        torus.rotation.z += 0.01;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+            // Función para trazar ejes
+            function trazarEjes() {
+                const axesHelper = new THREE.AxesHelper(5); // Longitud de los ejes
+                scene.add(axesHelper);
+            }
+            trazarEjes(); // Llama a la función para trazar ejes
+           */
+          // ejemplo de ray casting
+           // Configuración de la escena
+     // Configuración de la escena
+     // Configuración de la escena
+     const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Crear un cubo
+      const cubeGeometry = new THREE.BoxGeometry(4,4,4);
+      const cubeMaterials = [
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+        new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+        new THREE.MeshBasicMaterial({ color: 0xffff00 }),
+        new THREE.MeshBasicMaterial({ color: 0x00ffff }),
+      ];
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+      cube.position.x = -5;
+      scene.add(cube);
+      // crea una figura 
+      const geometry = new THREE.TorusKnotGeometry( 20, 4, 100, 16 ); 
+const material = new THREE.MeshNormalMaterial( { color: 0xffff00 } ); 
+const torusKnot = new THREE.Mesh( geometry, material ); 
+scene.add( torusKnot );
+
+      // Crear un toro (torus)
+      const torusGeometry = new THREE.TorusGeometry(3, 0.9, 15, 110);
+      const torusMaterials = [
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+        new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+        new THREE.MeshBasicMaterial({ color: 0xffff00 }),
+        new THREE.MeshBasicMaterial({ color: 0x00ffff }),
+      ];
+      const torus = new THREE.Mesh(torusGeometry, torusMaterials);
+      torus.position.x = 5;
+      scene.add(torus);
+
+      // Crear una esfera
+      const sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
+      const sphereMaterials = [
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+        new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+        new THREE.MeshBasicMaterial({ color: 0xffff00 }),
+        new THREE.MeshBasicMaterial({ color: 0x00ffff }),
+      ];
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterials);
+      scene.add(sphere);
+
+      camera.position.z = 5;
+
+      function trazarEjes() {
+                const axesHelper = new THREE.AxesHelper(5); // Longitud de los ejes
+                scene.add(axesHelper);
+            }
+            trazarEjes(); // Llama a la función para trazar ejes
+      // Ray Casting
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      const onMouseMove = (event) => {
+        // Normaliza la posición del mouse de (-1,1) a (0,1)
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      };
+
+      // Colores
+      let colorIndex = 0;
+      const numColors = cubeMaterials.length;
+
+      // Detecta clics
+      const onClick = () => {
+        raycaster.setFromCamera(mouse, camera);
+
+        // Encuentra intersecciones
+        const intersects = raycaster.intersectObjects([cube, torus, sphere]);
+
+        if (intersects.length > 0) {
+          const intersectedObject = intersects[0].object;
+          intersectedObject.material = cubeMaterials[colorIndex];
+          colorIndex = (colorIndex + 1) % numColors; // Cambia al siguiente color
+        }
+      };
+
+      window.addEventListener("mousemove", onMouseMove, false);
+      window.addEventListener("click", onClick, false);
+      camera.position.y = 2;
+      // Animación
+      const animate = () => {
+        requestAnimationFrame(animate);
+        cube.rotation.z += 0.05;
+        sphere.rotation.y += 0.05;
+        torus.rotation.x += 0.05;
+        torusKnot.rotation.z+= 0.03;
+        // Renderiza la escena
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+
+        camera.position.z = 5;
+        var controls= new OrbitControls(camera, renderer.domElement);
+        controls.minDistance = 2;
+        controls.maxDistance = 14;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.5;
+        controls.maxPolarAngle = Math.PI;
+        controls.screenSpacePanning = true;
+
+        //camera.position.x = 2;
+       
+
+     
+
+
+    </script>
+</body>
+</html>
