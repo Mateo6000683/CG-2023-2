@@ -60,13 +60,19 @@
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.25;
+
         controls.enableZoom = true;
+        controls.minDistance = 2;
+        controls.maxDistance = 14;
+
+        controls.dampingFactor = 0.5;
+        controls.maxPolarAngle = Math.PI;
+        controls.screenSpacePanning = true;
 
         const geometry1 = new THREE.BoxGeometry();
         const material1 = new THREE.ShaderMaterial({
-            vertexShader: lambertVertexShader,
-            fragmentShader: lambertFragmentShader
+            vertexShader: phongVertexShader,
+            fragmentShader: phongFragmentShader
         });
         const cube1 = new THREE.Mesh(geometry1, material1);
         cube1.position.set(-2, 0, 0);
@@ -74,18 +80,29 @@
 
         const geometry2 = new THREE.SphereGeometry(1, 32, 32);
         const material2 = new THREE.ShaderMaterial({
-            vertexShader: phongVertexShader,
-            fragmentShader: phongFragmentShader
+            vertexShader: lambertVertexShader,
+            fragmentShader: lambertFragmentShader
         });
         const sphere = new THREE.Mesh(geometry2, material2);
         sphere.position.set(2, 0, 0);
         scene.add(sphere);
 
+        const geometry3=new THREE.TorusGeometry (2, 2, 2.5, 100 );
+        const material3 = new THREE.ShaderMaterial({
+            vertexShader: lambertVertexShader ,
+            fragmentShader:  lambertFragmentShader
+        });
+        const torus = new THREE.Mesh(geometry3, material3);
+        torus.position.set(2,0,0);
+        scene.add(torus);
+        
         camera.position.z = 5;
 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
+            torus.rotation.z += 0.05;
+            sphere.rotation.z += 0.05;
             renderer.render(scene, camera);
         }
 
