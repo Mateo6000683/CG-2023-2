@@ -89,13 +89,22 @@
 
         const geometry3=new THREE.TorusGeometry (2, 2, 2.5, 100 );
         const material3 = new THREE.ShaderMaterial({
-            vertexShader: lambertVertexShader ,
-            fragmentShader:  lambertFragmentShader
+            vertexShader: phongVertexShader ,
+            fragmentShader: phongFragmentShader
         });
+        
         const torus = new THREE.Mesh(geometry3, material3);
         torus.position.set(2,0,0);
         scene.add(torus);
         
+        const geometry4= new THREE.CylinderGeometry( 1, 1, 2, 3);
+        const material4 = new THREE.ShaderMaterial({
+            vertexShader: lambertVertexShader,
+            fragmentShader: lambertFragmentShader
+        });
+        const cilinder = new THREE.Mesh(geometry4, material4);
+        scene.add(cilinder);
+        cilinder.position.set(2,0,0);
         camera.position.z = 5;
 
         function animate() {
@@ -103,6 +112,7 @@
             controls.update();
             torus.rotation.z += 0.05;
             sphere.rotation.z += 0.05;
+            cilinder.rotation.z += 0.05;
             renderer.render(scene, camera);
         }
 
