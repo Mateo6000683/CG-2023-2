@@ -12,7 +12,7 @@
     <script src="https://cs.wellesley.edu/~cs307/threejs/libs/three-r80.min.js"></script>
     <script src="https://cs.wellesley.edu/~cs307/threejs/libs/OrbitControls-r95.js"></script>
     <script>
-        // Lambert and Phong illumination shaders
+       /* // Lambert and Phong illumination shaders
         const lambertVertexShader = `
             varying vec3 vNormal;
             void main() {
@@ -50,7 +50,52 @@
                 float sProd = pow(max(dot(reflectDir, viewDir), 0.0), 32.0);
                 gl_FragColor = vec4((0.8 * dProd) + (0.5 * sProd), (0.8 * dProd) + (0.5 * sProd), (0.8 * dProd) + (0.5 * sProd), 1.0);
             }
-        `;
+        `;*/
+        const lambertVertexShader = `
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vColor = vec3(1.0, 0.0, 0.0); // Color rojo
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+
+const lambertFragmentShader = `
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    void main() {
+        vec3 light = vec3(1.0, 1.0, 1.0);
+        light = normalize(light);
+        float dProd = dot(vNormal, light);
+        gl_FragColor = vec4(vColor * (0.8 * dProd), 1.0);
+    }
+`;
+
+const phongVertexShader = `
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vColor = vec3(0.0, 0.0, 1.0); // Color azul
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+
+const phongFragmentShader = `
+    varying vec3 vNormal;
+    varying vec3 vColor;
+    void main() {
+        vec3 light = vec3(1.0, 1.0, 1.0);
+        light = normalize(light);
+        vec3 viewDir = normalize(-vec3(gl_FragCoord));
+        vec3 reflectDir = reflect(-light, vNormal);
+        float dProd = max(dot(vNormal, light), 0.0);
+        float sProd = pow(max(dot(reflectDir, viewDir), 0.0), 32.0);
+        gl_FragColor = vec4(vColor * ((0.8 * dProd) + (0.5 * sProd)), 1.0);
+    }
+`;
+
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -59,15 +104,14 @@
         document.body.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
+       
+        controls.minDistance = 1;
+        controls.maxDistance = 20;
         controls.enableDamping = true;
-
-        controls.enableZoom = true;
-        controls.minDistance = 2;
-        controls.maxDistance = 14;
-
         controls.dampingFactor = 0.5;
         controls.maxPolarAngle = Math.PI;
         controls.screenSpacePanning = true;
+       
 
         const geometry1 = new THREE.BoxGeometry();
         const material1 = new THREE.ShaderMaterial({
@@ -78,7 +122,7 @@
         cube1.position.set(-2, 0, 0);
         scene.add(cube1);
 
-        const geometry2 = new THREE.SphereGeometry(1, 32, 32);
+        const geometry2 = new THREE.SphereGeometry(3, 32, 32);
         const material2 = new THREE.ShaderMaterial({
             vertexShader: lambertVertexShader,
             fragmentShader: lambertFragmentShader
@@ -87,7 +131,7 @@
         sphere.position.set(2, 0, 0);
         scene.add(sphere);
 
-        const geometry3=new THREE.TorusGeometry (2, 2, 2.5, 100 );
+        const geometry3=new THREE.TorusGeometry (5, 5, 3, 100 );
         const material3 = new THREE.ShaderMaterial({
             vertexShader: phongVertexShader ,
             fragmentShader: phongFragmentShader
@@ -97,7 +141,7 @@
         torus.position.set(2,0,0);
         scene.add(torus);
         
-        const geometry4= new THREE.CylinderGeometry( 1, 1, 2, 3);
+        const geometry4= new THREE.CylinderGeometry( 3, 4, 5, 3);
         const material4 = new THREE.ShaderMaterial({
             vertexShader: lambertVertexShader,
             fragmentShader: lambertFragmentShader
@@ -105,7 +149,7 @@
         const cilinder = new THREE.Mesh(geometry4, material4);
         scene.add(cilinder);
         cilinder.position.set(2,0,0);
-        camera.position.z = 5;
+        camera.position.z = 10;
 
         function animate() {
             requestAnimationFrame(animate);
