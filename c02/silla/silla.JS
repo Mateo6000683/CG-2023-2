@@ -34,6 +34,7 @@ cube1.position.set(-0.35,-0.5,-0.35);
 cube2.position.set(0.35,-0.5,-0.35);
 cube3.position.set(-0.35,-0.5,0.35);
 cube4.position.set(0.35,-0.5,0.35);
+hola bbesita 
 
 // Agregar todas las partes de la silla al grupo
 sillaGroup.add(cube, cube1, cube2, cube3, cube4, cylinder);
